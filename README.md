@@ -44,6 +44,6 @@ Make calls to the server:
 
 ## TODO
 
-Investigate
+- value accumulation
 - pooling
 - distributed buffer
