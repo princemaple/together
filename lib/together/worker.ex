@@ -1,6 +1,14 @@
 defmodule Together.Worker do
   use GenServer
 
+  @moduledoc ~S"""
+  Together.Worker can be started with the following options:
+
+  - `keep: :first | :last | :all`
+  - `delay: integer`
+  - `renew: boolean`
+  """
+
   @default_opts %{
     keep: :last,
     delay: 60_000,
