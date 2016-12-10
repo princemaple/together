@@ -2,7 +2,7 @@ defmodule TogetherTest do
   use ExUnit.Case, async: true
 
   test "it groups jobs together" do
-    {:ok, pid} = Together.start_link(delay: 100)
+    {:ok, pid} = Together.Server.start_link(delay: 100)
 
     slow_send(self(), pid, 1..3, 45)
 
@@ -10,7 +10,7 @@ defmodule TogetherTest do
   end
 
   test "it works through jobs" do
-    {:ok, pid} = Together.start_link(delay: 100)
+    {:ok, pid} = Together.Server.start_link(delay: 100)
 
     slow_send(self(), pid, 1..4, 45)
 
@@ -19,7 +19,7 @@ defmodule TogetherTest do
   end
 
   test "it renews delay" do
-    {:ok, pid} = Together.start_link(delay: 100, renew: true)
+    {:ok, pid} = Together.Server.start_link(delay: 100, renew: true)
 
     slow_send(self(), pid, 1..4, 45)
 
@@ -27,7 +27,7 @@ defmodule TogetherTest do
   end
 
   test "it works with different ids" do
-    {:ok, pid} = Together.start_link(delay: 100, renew: true)
+    {:ok, pid} = Together.Server.start_link(delay: 100, renew: true)
 
     slow_send(self(), pid, 1..4, 45, "1")
     slow_send(self(), pid, 1..5, 45, "2")
@@ -37,8 +37,8 @@ defmodule TogetherTest do
   end
 
   test "it works with multiple instances" do
-    {:ok, pid1} = Together.start_link(delay: 100, renew: true)
-    {:ok, pid2} = Together.start_link(delay: 100, renew: true)
+    {:ok, pid1} = Together.Server.start_link(delay: 100, renew: true)
+    {:ok, pid2} = Together.Server.start_link(delay: 100, renew: true)
 
     slow_send(self(), pid1, 1..4, 45)
     slow_send(self(), pid2, 1..5, 45)
