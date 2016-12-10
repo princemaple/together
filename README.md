@@ -1,6 +1,6 @@
 # Together
 
-**TODO: Add description**
+Group actions that need to be performed later together
 
 ## Installation
 
