@@ -22,25 +22,25 @@ end
 
 ## How to use
 
-Start a `Together.Server` to use it
+Start a `Together.Worker` to use it
 
 You can start it by adding a worker to your app's supervision tree
 
 ```elixir
-worker(Together.Server, [[delay: 3000, renew: true], [name: Together.Server]])
+worker(Together.Worker, [[delay: 3000, renew: true], [name: Together.Worker]])
 ```
 
 Or start it as you would any other GenServer
 
 ```elixir
-{:ok, pid} = Together.Server.start_link(delay: 300, renew: true)
+{:ok, pid} = Together.Worker.start_link(delay: 300, renew: true)
 ```
 
-Make calls to the server:
+Make calls to the worker process:
 
 - `Together.process(pid, "some_unique_name_or_id", a_function)`
 - `Together.process(pid, "id", Module, :func, [arg1, arg2, ...])`
-- `Together.process("something", some_func)` you can omit the pid if the server is started with name `Together.Server`
+- `Together.process("something", some_func)` you can omit the pid if the server is started with name `Together.Worker`
 
 ## TODO
 

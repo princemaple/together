@@ -1,4 +1,4 @@
-defmodule Together.Server do
+defmodule Together.Worker do
   use GenServer
 
   @default_opts %{
@@ -9,7 +9,7 @@ defmodule Together.Server do
   }
 
   def start_link(opts \\ [], gen_server_opts \\ []) do
-    GenServer.start_link(Together.Server, opts, gen_server_opts)
+    GenServer.start_link(Together.Worker, opts, gen_server_opts)
   end
 
   def init(opts) do
