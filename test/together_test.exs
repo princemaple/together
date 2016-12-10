@@ -18,6 +18,15 @@ defmodule TogetherTest do
     assert_receive 4
   end
 
+  test "it keeps the first value" do
+    {:ok, pid} = Together.Worker.start_link(delay: 100, keep: :first)
+
+    slow_send(self(), pid, 1..4, 45)
+
+    assert_receive 1
+    assert_receive 4
+  end
+
   test "it renews delay" do
     {:ok, pid} = Together.Worker.start_link(delay: 100, renew: true)
 
