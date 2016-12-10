@@ -16,7 +16,7 @@ end
 
 ## How to use
 
-Start a Together.Server to use it
+Start a `Together.Server` to use it
 
 You can start it by adding a worker to your app's supervision tree
 

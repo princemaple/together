@@ -2,7 +2,7 @@ defmodule Together do
   @moduledoc ~S"""
   Group actions that need to be performed later together
 
-  Start a Together.Server to use it
+  Start a `Together.Server` to use it
 
   You can start it by adding a worker to your app's supervision tree
 
