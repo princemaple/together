@@ -52,8 +52,8 @@ defmodule Together.Worker do
     actions
     |> Enum.reverse
     |> Enum.each(fn
-      {m, f, a} -> Kernel.apply(m, f, a)
-      func -> func.()
+      {m, f, a} -> Task.start(m, f, a)
+      func -> Task.start(func)
     end)
 
     {:noreply, {config, buffer}}
