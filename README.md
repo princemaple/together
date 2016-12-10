@@ -41,3 +41,9 @@ Make calls to the server:
 - `Together.process(pid, "some_unique_name_or_id", a_function)`
 - `Together.process(pid, "id", Module, :func, [arg1, arg2, ...])`
 - `Together.process("something", some_func)` you can omit the pid if the server is started with name `Together.Server`
+
+## TODO
+
+Investigate
+- pooling
+- distributed buffer
