@@ -7,7 +7,8 @@ defmodule Together.Mixfile do
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+     package: package()]
   end
 
   def application do
@@ -15,6 +16,13 @@ defmodule Together.Mixfile do
   end
 
   defp deps do
-    []
+    [{:ex_doc, ">= 0.0.0", only: :dev}]
+  end
+
+  defp package do
+    [description: "Group actions that need to be performed later together",
+     licenses: ["MIT"],
+     maintainers: ["Po Chen"],
+     links: %{"GitHub": "https://github.com/princemaple/together"}]
   end
 end
