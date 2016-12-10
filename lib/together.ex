@@ -2,6 +2,14 @@ defmodule Together do
   @moduledoc ~S"""
   Group actions that need to be performed later together
 
+  ## What for?
+
+  - group notifications before sending an email about them
+  - only sending the very last value of a fast changing entity (renew: true)
+  - only using the very first value of a changing entity in every fixed period (renew: false)
+
+  ## How to use
+
   Start a `Together.Server` to use it
 
   You can start it by adding a worker to your app's supervision tree

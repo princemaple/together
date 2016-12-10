@@ -2,6 +2,12 @@
 
 Group actions that need to be performed later together
 
+## What for?
+
+- group notifications before sending an email about them
+- only sending the very last value of a fast changing entity (renew: true)
+- only using the very first value of a changing entity in every fixed period (renew: false)
+
 ## Installation
 
 The package can be installed as:
