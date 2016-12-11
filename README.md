@@ -1,4 +1,4 @@
-# Together
+# Together [![Hex.pm](https://img.shields.io/hexpm/v/together.svg)]()
 
 Group actions that need to be performed later together
 
