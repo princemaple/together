@@ -17,7 +17,11 @@ defmodule Together.Worker do
   }
 
   def start_link(opts \\ [], gen_server_opts \\ []) do
-    case GenServer.start_link(__MODULE__, opts, gen_server_opts) do
+    case GenServer.start_link(
+      __MODULE__,
+      proxy_name(opts, gen_server_opts),
+      gen_server_opts
+    ) do
       {:ok, pid} ->
         {:ok, pid}
       {:error, {:already_started, pid}} ->
@@ -26,7 +30,23 @@ defmodule Together.Worker do
     end
   end
 
+  defp proxy_name(opts, gen_server_opts) do
+    case Keyword.fetch(gen_server_opts, :name) do
+      {:ok, name} ->
+        [{:name, name} | opts]
+      :error ->
+        opts
+    end
+  end
+
   def init(opts) do
+    opts =
+      with [{:name, name} | rest] <- opts do
+        [{:proxy, Together.Proxy.start(name)} | opts]
+      else
+        _ -> [{:proxy, Together.Proxy.start(self())} | opts]
+      end
+
     {:ok, {Enum.into(opts, @default_opts), %{}}}
   end
 
@@ -34,13 +54,13 @@ defmodule Together.Worker do
     {:reply, :ok, {config, update(buffer, id, action, config)}}
   end
 
-  defp update(buffer, id, action, config) do
+  defp update(buffer, id, action, %{proxy: proxy, delay: delay} = config) do
     record =
       with %{^id => record} <- buffer do
         update_record(record, id, action, config)
       else
         _ ->
-          {[action], Process.send_after(self(), {:proceed, id}, config.delay)}
+          {[action], Together.Proxy.queue(proxy, id, delay)}
       end
 
     Map.put(buffer, id, record)
@@ -55,12 +75,12 @@ defmodule Together.Worker do
   defp update_actions(actions, action, %{keep: :all}), do: [action | actions]
 
   defp update_ref(ref, _id, %{renew: false}), do: ref
-  defp update_ref(ref, id, %{renew: true, delay: delay}) do
+  defp update_ref(ref, id, %{renew: true, delay: delay, proxy: proxy}) do
     Process.cancel_timer(ref)
-    Process.send_after(self(), {:proceed, id}, delay)
+    Together.Proxy.queue(proxy, id, delay)
   end
 
-  def handle_info({:proceed, id}, {config, buffer}) do
+  def handle_cast({:proceed, id}, {config, buffer}) do
     {{actions, _ref}, buffer} = Map.pop(buffer, id)
 
     actions
