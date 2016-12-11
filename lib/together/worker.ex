@@ -17,7 +17,13 @@ defmodule Together.Worker do
   }
 
   def start_link(opts \\ [], gen_server_opts \\ []) do
-    GenServer.start_link(Together.Worker, opts, gen_server_opts)
+    case GenServer.start_link(__MODULE__, opts, gen_server_opts) do
+      {:ok, pid} ->
+        {:ok, pid}
+      {:error, {:already_started, pid}} ->
+        Process.link(pid)
+        {:ok, pid}
+    end
   end
 
   def init(opts) do
