@@ -41,7 +41,7 @@ defmodule Together.Worker do
 
   def init(opts) do
     opts =
-      with [{:name, name} | rest] <- opts do
+      with [{:name, name} | _rest] <- opts do
         [{:proxy, Together.Proxy.start(name)} | opts]
       else
         _ -> [{:proxy, Together.Proxy.start(self())} | opts]
