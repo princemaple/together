@@ -2,6 +2,11 @@
 
 Group actions that need to be performed later together
 
+## Links
+
+- [Hex](https://hex.pm/packages/together)
+- [Hex Docs](https://hexdocs.pm/together/Together.html)
+
 ## What for?
 
 - group notifications before sending an email about them
