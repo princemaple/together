@@ -56,6 +56,15 @@ defmodule TogetherTest do
     assert_receive 5
   end
 
+  test "it cancels the jobs" do
+    {:ok, pid} = Together.Worker.start_link(delay: 100, renew: true)
+
+    slow_send(self(), pid, [1], 0, "id")
+    Together.cancel(pid, "id")
+
+    refute_receive 1
+  end
+
   defp slow_send(test_process, pid, range, delay, id \\ "id") do
     Enum.each(
       range,
