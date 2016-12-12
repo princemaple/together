@@ -41,7 +41,7 @@ defmodule Together do
     GenServer.call(pid, {:process, id, {m, f, a}})
   end
 
-  @spec cancel(atom | pid, term) :: :ok | no_return
+  @spec cancel(atom | pid, term) :: :ok | :error
   def cancel(pid \\ Together.Worker, id) do
     GenServer.call(pid, {:cancel, id})
   end

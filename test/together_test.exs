@@ -57,12 +57,21 @@ defmodule TogetherTest do
   end
 
   test "it cancels the jobs" do
-    {:ok, pid} = Together.Worker.start_link(delay: 100, renew: true)
+    {:ok, pid} = Together.Worker.start_link(delay: 100)
 
     slow_send(self(), pid, [1], 0, "id")
-    Together.cancel(pid, "id")
+    result = Together.cancel(pid, "id")
 
+    assert result == :ok
     refute_receive 1
+  end
+
+  test "it returns error when fails to cancel a job" do
+    {:ok, pid} = Together.Worker.start_link(delay: 100)
+
+    result = Together.cancel(pid, "id")
+
+    assert result == :error
   end
 
   defp slow_send(test_process, pid, range, delay, id \\ "id") do

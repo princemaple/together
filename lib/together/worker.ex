@@ -55,9 +55,13 @@ defmodule Together.Worker do
   end
 
   def handle_call({:cancel, id}, _from, {config, buffer}) do
-    {{_actions, ref}, buffer} = Map.pop(buffer, id)
-    Process.cancel_timer(ref)
-    {:reply, :ok, {config, buffer}}
+    with {{_actions, ref}, buffer} <- Map.pop(buffer, id) do
+      Process.cancel_timer(ref)
+      {:reply, :ok, {config, buffer}}
+    else
+      {nil, buffer} ->
+        {:reply, :error, {config, buffer}}
+    end
   end
 
   defp update(buffer, id, action, %{proxy: proxy, delay: delay} = config) do
