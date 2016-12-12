@@ -31,16 +31,25 @@ defmodule Together do
   - `Together.process("something", some_func)` you can omit the pid if the server is started with name `Together.Worker`
   """
 
+  @doc ~S"""
+  put in a function under the id to be processed (invoked) later
+  """
   @spec process(atom | pid, term, fun) :: :ok | no_return
   def process(pid \\ Together.Worker, id, func) do
     GenServer.call(pid, {:process, id, func})
   end
 
+  @doc ~S"""
+  put in an `mfa` under the id to be processed (invoked/applied) later
+  """
   @spec process(atom | pid, term, module, atom, list) :: :ok | no_return
   def process(pid \\ Together.Worker, id, m, f, a) do
     GenServer.call(pid, {:process, id, {m, f, a}})
   end
 
+  @doc ~S"""
+  cancels queued action(s) for the given id
+  """
   @spec cancel(atom | pid, term) :: :ok | :error
   def cancel(pid \\ Together.Worker, id) do
     GenServer.call(pid, {:cancel, id})
