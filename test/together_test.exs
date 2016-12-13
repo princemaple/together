@@ -64,6 +64,14 @@ defmodule TogetherTest do
     assert_receive 5
   end
 
+  test "it works with mfa", %{store: store} do
+    {:ok, pid} = start_worker(store, delay: 100)
+
+    Together.process(pid, "mfa", Process, :send, [self(), :mfa, []])
+
+    assert_receive :mfa
+  end
+
   @tag :cancel
   test "it cancels the jobs", %{store: store} do
     {:ok, pid} = start_worker(store, delay: 100)
