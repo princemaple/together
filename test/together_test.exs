@@ -1,7 +1,7 @@
 defmodule TogetherTest do
   use ExUnit.Case, async: true
 
-  setup do
+  setup_all do
     {store_name, shards_name} = {rand_name(), rand_name()}
 
     {:ok, store} = Together.Store.start_link([name: shards_name], name: store_name)
