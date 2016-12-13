@@ -1,13 +1,14 @@
 defmodule Together.Worker do
-  use GenServer
-
   @moduledoc ~S"""
   Together.Worker can be started with the following options:
 
-  - `keep: :first | :last | :all`
+  - `keep: :first | :last`
   - `delay: integer`
   - `renew: boolean`
   """
+
+  use GenServer
+  use Together.Global, :start_link
 
   @default_opts %{
     keep: :last,
@@ -15,16 +16,6 @@ defmodule Together.Worker do
     renew: false,
     count: false
   }
-
-  def start_link(opts \\ [], gen_server_opts \\ []) do
-    case GenServer.start_link(__MODULE__, opts, gen_server_opts) do
-      {:ok, pid} ->
-        {:ok, pid}
-      {:error, {:already_started, pid}} ->
-        Process.link(pid)
-        {:ok, pid}
-    end
-  end
 
   def init(opts) do
     {:ok, Enum.into(opts, @default_opts)}

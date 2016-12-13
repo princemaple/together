@@ -1,15 +1,6 @@
 defmodule Together.Proxy do
   use GenServer
-
-  def start_link(worker, gen_server_opts \\ []) do
-    case GenServer.start_link(__MODULE__, worker, gen_server_opts) do
-      {:ok, pid} ->
-        {:ok, pid}
-      {:error, {:already_started, pid}} ->
-        Process.link(pid)
-        {:ok, pid}
-    end
-  end
+  use Together.Global, :start_link
 
   def queue(pid \\ __MODULE__, id, delay) do
     GenServer.call(pid, {:queue, id, delay})
