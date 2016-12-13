@@ -1,80 +1,98 @@
 defmodule TogetherTest do
   use ExUnit.Case, async: true
 
-  test "it groups jobs together" do
-    {:ok, pid} = Together.Worker.start_link(delay: 100)
+  setup do
+    {store_name, shards_name} = {rand_name(), rand_name()}
 
-    slow_send(self(), pid, 1..3, 45)
+    {:ok, store} = Together.Store.start_link([name: shards_name], name: store_name)
+
+    [store: store]
+  end
+
+  test "it groups jobs together", %{store: store} do
+    {:ok, pid} = start_worker(store, delay: 100)
+
+    slow_send(pid, 1..3, 45)
 
     assert_receive 3
   end
 
-  test "it works through jobs" do
-    {:ok, pid} = Together.Worker.start_link(delay: 100)
+  test "it works through jobs", %{store: store} do
+    {:ok, pid} = start_worker(store, delay: 100)
 
-    slow_send(self(), pid, 1..4, 45)
+    slow_send(pid, 1..4, 45)
 
     assert_receive 3
     assert_receive 4
   end
 
-  test "it keeps the first value" do
-    {:ok, pid} = Together.Worker.start_link(delay: 100, keep: :first)
+  test "it keeps the first value", %{store: store} do
+    {:ok, pid} = start_worker(store, delay: 100, keep: :first)
 
-    slow_send(self(), pid, 1..4, 45)
+    slow_send(pid, 1..4, 45)
 
     assert_receive 1
     assert_receive 4
   end
 
-  test "it renews delay" do
-    {:ok, pid} = Together.Worker.start_link(delay: 100, renew: true)
+  test "it renews delay", %{store: store} do
+    {:ok, pid} = start_worker(store, delay: 100, renew: true)
 
-    slow_send(self(), pid, 1..4, 45)
+    slow_send(pid, 1..4, 45)
 
     assert_receive 4
   end
 
-  test "it works with different ids" do
-    {:ok, pid} = Together.Worker.start_link(delay: 100, renew: true)
+  test "it works with different ids", %{store: store} do
+    {:ok, pid} = start_worker(store, delay: 100, renew: true)
 
-    slow_send(self(), pid, 1..4, 45, "1")
-    slow_send(self(), pid, 1..5, 45, "2")
-
-    assert_receive 4
-    assert_receive 5
-  end
-
-  test "it works with multiple instances" do
-    {:ok, pid1} = Together.Worker.start_link(delay: 100, renew: true)
-    {:ok, pid2} = Together.Worker.start_link(delay: 100, renew: true)
-
-    slow_send(self(), pid1, 1..4, 45)
-    slow_send(self(), pid2, 1..5, 45)
+    slow_send(pid, 1..4, 45, "1")
+    slow_send(pid, 1..5, 45, "2")
 
     assert_receive 4
     assert_receive 5
   end
 
-  test "it cancels the jobs" do
-    {:ok, pid} = Together.Worker.start_link(delay: 100)
+  test "it works with multiple instances", %{store: store} do
+    {:ok, pid1} = start_worker(store, delay: 100, renew: true)
+    {:ok, pid2} = start_worker(store, delay: 100, renew: true)
 
-    slow_send(self(), pid, [1], 0, "id")
-    result = Together.cancel(pid, "id")
+    slow_send(pid1, 1..4, 45)
+    slow_send(pid2, 1..5, 45)
+
+    assert_receive 4
+    assert_receive 5
+  end
+
+  @tag :cancel
+  test "it cancels the jobs", %{store: store} do
+    {:ok, pid} = start_worker(store, delay: 100)
+
+    slow_send(pid, [1], 0, "cancel_success")
+    result = Together.cancel(pid, "cancel_success")
 
     assert result == :ok
     refute_receive 1
   end
 
-  test "it returns error when fails to cancel a job" do
-    {:ok, pid} = Together.Worker.start_link(delay: 100)
+  @tag :cancel
+  test "it returns error when fails to cancel a job", %{store: store} do
+    {:ok, pid} = start_worker(store, delay: 100)
 
-    result = Together.cancel(pid, "id")
+    result = Together.cancel(pid, "cancel_failure")
 
     assert result == :error
   end
 
-  defp slow_send(test_process, pid, range, delay, id \\ "id") do
+  defp start_worker(store, opts) do
+    worker_name = rand_name()
+    {:ok, proxy_pid} = Together.Proxy.start_link(worker_name)
+    Together.Worker.start_link([store: store, proxy: proxy_pid] ++ opts, name: worker_name)
+  end
+
+  defp slow_send(pid, range, delay, id \\ rand_name()) do
+    test_process = self()
+
     Enum.each(
       range,
       fn x ->
@@ -86,5 +104,9 @@ defmodule TogetherTest do
         )
       end
     )
+  end
+
+  defp rand_name do
+    16 |> :crypto.strong_rand_bytes |> Base.encode64 |> String.to_atom
   end
 end

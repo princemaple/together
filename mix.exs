@@ -12,11 +12,12 @@ defmodule Together.Mixfile do
   end
 
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :shards]]
   end
 
   defp deps do
-    [{:ex_doc, ">= 0.0.0", only: :dev}]
+    [{:shards, "~> 0.3.1"},
+     {:ex_doc, ">= 0.0.0", only: :dev}]
   end
 
   defp package do
