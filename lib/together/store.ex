@@ -46,4 +46,8 @@ defmodule Together.Store do
     true = :shards.delete(shards_name, key)
     {:noreply, shards_name}
   end
+
+  def terminate(_,shards_name) do
+    :shards.delete(shards_name)
+  end
 end
