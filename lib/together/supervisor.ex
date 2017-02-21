@@ -2,6 +2,7 @@ defmodule Together.Supervisor do
   use Supervisor
 
   @registry_name Together.WorkerRegistry
+  @store_name Together.Store
 
   alias Together.{Worker, Proxy, Store}
 
@@ -26,8 +27,8 @@ defmodule Together.Supervisor do
 
     List.flatten([
       worker(Registry, [:unique, @registry_name]),
-      worker(Store, [shards_opts, [name: Together.Store]]),
-      Enum.map(worker_definitions, &parse_worker_spec(&1, Together.Store))
+      worker(Store, [shards_opts, [name: @store_name]]),
+      Enum.map(worker_definitions, &parse_worker_spec(&1, @store_name))
     ])
   end
 
