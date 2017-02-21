@@ -34,7 +34,7 @@ defmodule Together do
   @doc ~S"""
   put in a function under the id to be processed (invoked) later
   """
-  @spec process(atom | pid, term, fun) :: :ok | no_return
+  @spec process(GenServer.server, term, fun) :: :ok | no_return
   def process(pid \\ Together.Worker, id, func) do
     GenServer.call(pid, {:process, id, func})
   end
@@ -42,7 +42,7 @@ defmodule Together do
   @doc ~S"""
   put in an `mfa` under the id to be processed (invoked/applied) later
   """
-  @spec process(atom | pid, term, module, atom, list) :: :ok | no_return
+  @spec process(GenServer.server, term, module, atom, list) :: :ok | no_return
   def process(pid \\ Together.Worker, id, m, f, a) do
     GenServer.call(pid, {:process, id, {m, f, a}})
   end
@@ -50,7 +50,7 @@ defmodule Together do
   @doc ~S"""
   cancels queued action(s) for the given id
   """
-  @spec cancel(atom | pid, term) :: :ok | :error
+  @spec cancel(GenServer.server, term) :: :ok | :error
   def cancel(pid \\ Together.Worker, id) do
     GenServer.call(pid, {:cancel, id})
   end
