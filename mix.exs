@@ -3,8 +3,8 @@ defmodule Together.Mixfile do
 
   def project do
     [app: :together,
-     version: "0.2.1",
-     elixir: "~> 1.3",
+     version: "0.3.0",
+     elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps(),
@@ -12,11 +12,11 @@ defmodule Together.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :shards]]
+    [extra_applications: [:logger]]
   end
 
   defp deps do
-    [{:shards, "~> 0.3.1"},
+    [{:ex_shards, "~> 0.2"},
      {:ex_doc, ">= 0.0.0", only: :dev}]
   end
 
