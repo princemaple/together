@@ -24,30 +24,31 @@ defmodule Together.Store do
 
   def init(opts) do
     {name, opts} = Keyword.pop(opts, :name, Together.Store.Shards)
-    {:ok, ^name = :shards.new(name, opts)}
+    {:ok, ^name = ExShards.new(name, opts)}
   end
 
   def handle_call({:put, key, value}, _from, shards_name) do
-    true = :shards.insert(shards_name, [{key, value}])
+    ExShards.put(shards_name, key, value)
     {:reply, :ok, shards_name}
   end
 
   def handle_call({:get, key}, _from, shards_name) do
-    {:reply, :shards.lookup(shards_name, key), shards_name}
+    {:reply, ExShards.get(shards_name, key), shards_name}
   end
 
   def handle_call({:pop, key}, _from, shards_name) do
-    value = :shards.lookup(shards_name, key)
-    true = :shards.delete(shards_name, key)
+    value = ExShards.pop(shards_name, key)
     {:reply, value, shards_name}
   end
 
   def handle_cast({:delete, key}, shards_name) do
-    true = :shards.delete(shards_name, key)
+    true = ExShards.delete(shards_name, key)
     {:noreply, shards_name}
   end
 
-  def terminate(_,shards_name) do
-    :shards.delete(shards_name)
+  def terminate(_, shards_name) do
+    with {:state, :shards_local, _, _, _} <- ExShards.state(shards_name) do
+      true = ExShards.delete(shards_name)
+    end
   end
 end
