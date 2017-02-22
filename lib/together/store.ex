@@ -23,7 +23,18 @@ defmodule Together.Store do
   end
 
   def init(opts) do
-    {name, opts} = Keyword.pop(opts, :name, Together.Store.Shards)
+    {name, opts} = Keyword.pop(opts, :shards_name, Together.Store.Shards)
+
+    opts =
+      with :g <- Keyword.get(opts, :scope, :l),
+           nil <- Keyword.get(opts, :nodes)
+      do
+        Keyword.put(opts, :nodes, Node.list)
+      else
+        :l -> opts
+        nodes when is_list(nodes) -> opts
+      end
+
     {:ok, ^name = ExShards.new(name, opts)}
   end
 
