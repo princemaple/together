@@ -45,8 +45,6 @@ supervisor(Together.Supervisor, [])
 supervisor(Together.Supervisor, [workers: ..., store: ...])
 ```
 
-See `Together.Supervisor` for full configuration information
-
 Make calls to the worker process:
 
 ```elixir
@@ -54,6 +52,28 @@ Together.process(binary_name, "something_unique", some_func)
 Together.process(pid, "some_unique_name_or_id", a_function)
 Together.process(Together.Worker, "id", Module, :func, [arg1, arg2, ...])
 ```
+
+## Example config
+
+    config :together,
+      workers: [
+        # name is required, can be anything, prefer strings
+        [name: "throttled_job", delay: 30_000, type: :throttle],
+        [name: "debounced_job", delay: 5_000, type: :debounce],
+        [name: "keep_first_job", keep: :first],
+        # etc
+      ],
+      # omissible, if you don't want to change anything
+      store: [
+        # name for the Store process
+        name: MyApp.Together.Store,
+        # name for the ExShards main process
+        shards_name: MyApp.Together.Store.Shards,
+        # for distributed ets
+        scope: :g,
+        # nodes in the cluster, will use `Node.list` if omitted
+        nodes: [:"node2@172.18.0.3", :"node3@172.18.0.4"]
+      ]
 
 ## More ideas
 
