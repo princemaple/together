@@ -17,13 +17,15 @@ Group actions that can be handled / responded to later together
 
 ## Installation
 
+**Elixir 1.4 is required**
+
 The package can be installed as:
 
 Add `together` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:together, "~> 0.1.0"}]
+  [{:together, "~> 0.3"}]
 end
 ```
 
@@ -33,17 +35,23 @@ Start a `Together.Worker` to use it
 
 You can start it by adding a worker to your app's supervision tree
 
-    worker(Together.Worker, [[delay: 3000, type: :debounce], [name: Together.Worker]])
+```elixir
+worker(Together.Worker, [[delay: 3000, type: :debounce], [name: Together.Worker]])
+```
 
 Or start it as you would any other GenServer
 
-    {:ok, pid} = Together.Worker.start_link(delay: 30_000, type: :throttle)
+```elixir
+{:ok, pid} = Together.Worker.start_link(delay: 30_000, type: :throttle)
+```
 
 Make calls to the worker process:
 
-    Together.process(binary_name, "somethiny_unique", some_func)
-    Together.process(pid, "some_unique_name_or_id", a_function)
-    Together.process(Together.Worker, "id", Module, :func, [arg1, arg2, ...])
+```elixir
+Together.process(binary_name, "somethiny_unique", some_func)
+Together.process(pid, "some_unique_name_or_id", a_function)
+Together.process(Together.Worker, "id", Module, :func, [arg1, arg2, ...])
+```
 
 ## TODO
 
