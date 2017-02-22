@@ -7,7 +7,7 @@ Group actions that can be handled / responded to later together
 
 ## What for?
 
-- group notifications to be sent in ONE email
+- group notifications to be sent in *one* email
     - cancel the previously queued email if another event happens within a short period (type: debounce)
 - make heavy operations happen less often, i.e. refresh some global statistics
     - allow only 1 operation per certain period (type: throttle)
@@ -50,7 +50,7 @@ See `Together.Supervisor` for full configuration information
 Make calls to the worker process:
 
 ```elixir
-Together.process(binary_name, "somethiny_unique", some_func)
+Together.process(binary_name, "something_unique", some_func)
 Together.process(pid, "some_unique_name_or_id", a_function)
 Together.process(Together.Worker, "id", Module, :func, [arg1, arg2, ...])
 ```
