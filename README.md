@@ -25,7 +25,7 @@ Add `together` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:together, "~> 0.3"}]
+  [{:together, "~> 0.5"}]
 end
 ```
 
