@@ -6,7 +6,7 @@ defmodule Together.Supervisor do
 
   ## Start with configs passed in
 
-      supervisor(Together.Supervisor, [shards: ..., workers: ...])
+      supervisor(Together.Supervisor, [workers: ..., store: ...])
 
   ## Example config
 
