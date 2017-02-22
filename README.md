@@ -31,19 +31,21 @@ end
 
 ## How to use
 
-Start a `Together.Worker` to use it
+Start `Together.Supervisor` to use it
 
-You can start it by adding a worker to your app's supervision tree
-
-```elixir
-worker(Together.Worker, [[delay: 3000, type: :debounce], [name: Together.Worker]])
-```
-
-Or start it as you would any other GenServer
+### Start with application configs
 
 ```elixir
-{:ok, pid} = Together.Worker.start_link(delay: 30_000, type: :throttle)
+supervisor(Together.Supervisor, [])
 ```
+
+### Start with configs passed in
+
+```elixir
+supervisor(Together.Supervisor, [workers: ..., store: ...])
+```
+
+See `Together.Supervisor` for full configuration information
 
 Make calls to the worker process:
 
