@@ -55,6 +55,6 @@ Together.process(pid, "some_unique_name_or_id", a_function)
 Together.process(Together.Worker, "id", Module, :func, [arg1, arg2, ...])
 ```
 
-## TODO
+## More ideas
 
 - keep: all (seems to be touching `gen_stage` territory)
