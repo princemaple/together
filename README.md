@@ -33,13 +33,13 @@ end
 
 Start `Together.Supervisor` to use it
 
-### Start with application configs
+- Start with application configs
 
 ```elixir
 supervisor(Together.Supervisor, [])
 ```
 
-### Start with configs passed in
+- Start with configs passed in
 
 ```elixir
 supervisor(Together.Supervisor, [workers: ..., store: ...])

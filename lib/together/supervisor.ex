@@ -1,10 +1,10 @@
 defmodule Together.Supervisor do
   @moduledoc """
-  ## Start with application configs
+  Start with application configs
 
       supervisor(Together.Supervisor, [])
 
-  ## Start with configs passed in
+  Start with configs passed in
 
       supervisor(Together.Supervisor, [workers: ..., store: ...])
 
