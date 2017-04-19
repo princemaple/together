@@ -73,11 +73,11 @@ defmodule Together.Supervisor do
     worker_name = {:via, Registry, {@registry_name, name}}
 
     [
-      worker(Proxy, [worker_name, [name: proxy_name]]),
+      worker(Proxy, [worker_name, [name: proxy_name]], [id: make_ref()]),
       worker(Worker, [
         [store: store_name, proxy: proxy_name] ++ worker_spec,
         [name: worker_name]
-      ])
+      ], [id: make_ref()])
     ]
   end
 end
