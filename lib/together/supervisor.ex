@@ -53,7 +53,8 @@ defmodule Together.Supervisor do
     supervise(children, strategy: :one_for_one)
   end
 
-  defp parse_opts(opts) do
+  @doc false
+  def parse_opts(opts) do
     {store_opts, worker_definitions} =
       {Keyword.get(opts, :store, []),
        Keyword.get(opts, :workers, [])}
@@ -67,17 +68,18 @@ defmodule Together.Supervisor do
     ])
   end
 
-  defp parse_worker_spec(worker_spec, store_name) do
+  @doc false
+  def parse_worker_spec(worker_spec, store_name) do
     name = Keyword.fetch!(worker_spec, :name)
     proxy_name = {:via, Registry, {@registry_name, {:proxy, name}}}
     worker_name = {:via, Registry, {@registry_name, name}}
 
     [
-      worker(Proxy, [worker_name, [name: proxy_name]], [id: make_ref()]),
+      worker(Proxy, [worker_name, [name: proxy_name]], id: make_ref()),
       worker(Worker, [
         [store: store_name, proxy: proxy_name] ++ worker_spec,
         [name: worker_name]
-      ], [id: make_ref()])
+      ], id: make_ref())
     ]
   end
 end
