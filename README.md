@@ -29,7 +29,8 @@ def deps do
 end
 ```
 
-Since ex_shards uses shards, make sure that shards is started before your application:
+Since ex_shards uses shards, if you are still using `applications` instead of the new `extra_applications`,
+which infers applications list, make sure that shards is added to the list:
 
 ```elixir
 def application do
