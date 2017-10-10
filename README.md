@@ -29,6 +29,14 @@ def deps do
 end
 ```
 
+Since ex_shards uses shards, make sure that shards is started before your application:
+
+```elixir
+def application do
+  [applications: [:shards]]
+end
+```
+
 ## How to use
 
 Start `Together.Supervisor` to use it
