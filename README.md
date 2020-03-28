@@ -17,8 +17,6 @@ Group actions that can be handled / responded to later together
 
 ## Installation
 
-**Elixir 1.4 is required**
-
 The package can be installed as:
 
 Add `together` to your list of dependencies in `mix.exs`:
