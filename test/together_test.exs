@@ -2,7 +2,7 @@ defmodule TogetherTest do
   use ExUnit.Case, async: true
 
   setup_all do
-    Registry.start_link(:unique, WorkerRegistry)
+    Registry.start_link(keys: :unique, name: WorkerRegistry)
     {:ok, store} = Together.Store.start_link
 
     [store: store]
