@@ -1,6 +1,6 @@
 # Together
 
-[![Hex.pm](https://img.shields.io/hexpm/v/together.svg)]()
+[![Hex.pm](https://img.shields.io/hexpm/v/together.svg)](https://hex.pm/packages/together)
 [![Documentation](https://img.shields.io/badge/docs-hexpm-blue.svg)](https://hexdocs.pm/together)
 
 Group actions that can be handled / responded to later together
