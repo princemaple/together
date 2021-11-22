@@ -17,7 +17,7 @@ defmodule Together.Mixfile do
 
   defp deps do
     [{:ex_shards, "~> 0.2"},
-     {:ex_doc, ">= 0.0.0", only: :dev}]
+     {:ex_doc, ">= 0.0.0", only: :docs}]
   end
 
   defp package do
